@@ -30,6 +30,8 @@ Below are instructions on configuring a dedicated build machine to generate appl
     ```
     curl -L http://isoredirect.centos.org/centos/8-stream/isos/x86_64/CentOS-Stream-8-x86_64-20210608-dvd1.iso \
       -o /build/isos/CentOS-Stream-8-x86_64-20210608-dvd1.iso
+    curl -L http://mirror.stream.centos.org/9-stream/BaseOS/s390x/iso/CentOS-Stream-9-latest-s390x-dvd1.iso \
+      -o /build/isos/CentOS-Stream-9-latest-s390x-dvd1.iso
     ```
 
   * Add "-joliet-long" option to `genisoimage` command in `/usr/lib/python3.6/site-packages/oz/RedHat.py` to avoid the following error:
@@ -45,6 +47,25 @@ Below are instructions on configuring a dedicated build machine to generate appl
     dnf config-manager --add-repo=https://download.docker.com/linux/centos/docker-ce.repo
     dnf install docker-ce --nobest
     systemctl enable --now docker
+
+
+    # For s390x rhel
+    yum install ncurses -y
+    yum install sudo -y
+    sudo yum install -y yum-utils initscripts
+    sudo yum install git wget unzip -y
+    # Installing docker
+    sudo yum-config-manager \
+        --add-repo \
+        https://download.docker.com/linux/rhel/docker-ce.repo
+    sudo yum install docker-ce docker-ce-cli containerd.io docker-compose-plugin -y
+    sleep 10
+    sudo systemctl start docker
+    sudo systemctl status docker
+    systemctl enable docker
+    # Checking Docker version
+    docker version
+    ls -a
     ```
 
   * Login to a registry (for pushing image)
@@ -189,3 +210,74 @@ On t540p thinkpad, with the function lock key on, pressing F8 actually disables 
 # License
 
 See [LICENSE.txt](LICENSE.txt)
+
+
+
+
+
+
+
+
+
+
+## Configure virtualization hardware (if running build machine in a VM) S390X
+It looks like `eth0` is not recognized as a valid connection name. Here are a few things you can check and try:
+
+### 1. List Available Connections  
+Run the following command to see the actual connection name:
+```bash
+nmcli connection show
+```
+
+example
+```
+# nmcli connection show
+NAME     UUID                                  TYPE      DEVICE  
+enc4     b346c309-4a4c-35f1-8a64-860323421793  ethernet  enc4    
+enc3     35f9ea7d-06ca-3c20-a68e-df10b49fd950  ethernet  enc3    
+docker0  40eea5ea-d74e-47b5-8af4-02b534724140  bridge    docker0 
+lo       3d3c9f43-0e11-4f59-9e44-934a93409610  loopback  lo  
+```
+
+Look for an active connection name in the output (it might not be `eth0` but something like `ens192` or `Wired connection 1`).
+
+### 2. Use the Correct Connection Name  
+If the connection name is different, modify and bring it up using:
+```bash
+nmcli connection modify <actual_connection_name> ipv4.method auto
+nmcli connection up <actual_connection_name>
+```
+Replace `<actual_connection_name>` with the name from `nmcli connection show`.
+
+    # example
+    Your system does not have an `eth0` connection; instead, it has `enc3` and `enc4`. You should modify and bring up the correct connection.
+
+    ### Use the Correct Connection Name
+    Since `enc4` and `enc3` are your network interfaces, try modifying and activating one of them:
+
+    ```bash
+    nmcli connection modify enc4 ipv4.method auto
+    nmcli connection up enc4
+    ```
+    Or, if `enc3` is the correct one:
+    ```bash
+    nmcli connection modify enc3 ipv4.method auto
+    nmcli connection up enc3
+    ```
+
+### 3. Check Available Network Interfaces  
+If the above doesn't work, list network interfaces with:
+```bash
+ip link show
+```
+If `eth0` is not listed, your network interface might have a different name.
+
+### 4. Restart NetworkManager  
+Try restarting the NetworkManager service:
+```bash
+systemctl restart NetworkManager
+```
+Then check again with:
+```bash
+nmcli connection show
+```
