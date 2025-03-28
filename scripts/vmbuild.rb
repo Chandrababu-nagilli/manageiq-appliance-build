@@ -37,20 +37,19 @@ REFS_DIR            = BUILD_BASE.join("references")
 IMGFAC_DIR          = BUILD_BASE.join("imagefactory")
 IMGFAC_CONF         = CFG_DIR.join("imagefactory.conf")
 STORAGE_DIR         = BUILD_BASE.join("storage")
-ISOS_DIR            = Pathname.new("/build/isos") # NOTE: We are not using run-specific BUILD_BASE in order to share the source iso across builds
+ISOS_DIR            = Pathname.new("/build/isos")
 IMAGES_DIR          = BUILD_BASE.join("images")
-ISO_FILE            = ISOS_DIR.glob("CentOS-Stream-9-*-x86_64-dvd1.iso").sort.last.expand_path
 
-FileUtils.mkdir_p(BIN_DIR)
-FileUtils.mkdir_p(BUILD_BASE)
-FileUtils.mkdir_p(CFG_DIR)
-FileUtils.mkdir_p(IMAGES_DIR)
-FileUtils.mkdir_p(IMGFAC_DIR)
-FileUtils.mkdir_p(ISOS_DIR)
-FileUtils.mkdir_p(REFS_DIR)
-FileUtils.mkdir_p(STORAGE_DIR)
+# Detect architecture
+arch = `uname -m`.strip
+if arch == "s390x"
+  ISO_FILE = ISOS_DIR.glob("RHEL-9-*-s390x-dvd1.iso").sort.last&.expand_path
+else
+  ISO_FILE = ISOS_DIR.glob("CentOS-Stream-9-*-x86_64-dvd1.iso").sort.last&.expand_path
+end
 
-# Set Storage directory in imagefactory config
+FileUtils.mkdir_p([BIN_DIR, BUILD_BASE, CFG_DIR, IMAGES_DIR, IMGFAC_DIR, ISOS_DIR, REFS_DIR, STORAGE_DIR])
+
 imagefactory_config = CFG_DIR.join("imagefactory.conf")
 require 'json'
 json = JSON.load(imagefactory_config.read)
