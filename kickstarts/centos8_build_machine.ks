@@ -75,9 +75,11 @@ timezone America/New_York --isUtc --ntpservers=time.nist.gov # CHANGEME if neede
 mkdir -p /build/fileshare /build/images /build/isos /build/logs /build/storage
 
 pushd /build
-  git clone https://www.github.com/ManageIQ/manageiq-appliance-build.git
+  #git clone https://www.github.com/ManageIQ/manageiq-appliance-build.git
+  git clone https://github.com/Chandrababu-nagilli/manageiq-appliance-build.git
   ln -s manageiq-appliance-build/bin bin
-  git clone https://www.github.com/redhat-imaging/imagefactory.git
+  # git clone https://www.github.com/redhat-imaging/imagefactory.git
+  git clone https://github.com/Chandrababu-nagilli/imagefactory.git
 popd
 
 pip3 install oauth2 cherrypy boto monotonic
