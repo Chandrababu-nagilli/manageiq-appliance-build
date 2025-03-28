@@ -1,4 +1,4 @@
-#version=RHEL8
+#version=RHEL9
 
 ### See CHANGEME lines and adjust as needed ###
 
@@ -7,10 +7,10 @@ zerombr
 clearpart --all --initlabel --drives=sda
 partition /boot --ondisk=sda --asprimary --size=1024 --fstype=xfs
 partition pv.1 --ondisk=sda --asprimary --size=10240 --grow
-volgroup kegerator8 pv.1
-logvol swap --vgname=kegerator8 --name=swap --size=8192
-logvol / --vgname=kegerator8 --name=root --size=20480 --fstype=xfs
-logvol /build --vgname=kegerator8 --name=build --size=20480 --fstype=xfs --grow
+volgroup kegerator9 pv.1
+logvol swap --vgname=kegerator9 --name=swap --size=8192
+logvol / --vgname=kegerator9 --name=root --size=20480 --fstype=xfs
+logvol /build --vgname=kegerator9 --name=build --size=20480 --fstype=xfs --grow
 
 bootloader --append="rhgb quiet net.ifnames=0 biosdevname=0 crashkernel=auto" --driveorder="sda" --boot-drive=sda
 
@@ -21,12 +21,24 @@ reboot
 graphical
 
 # Use network installation
-url --url="http://mirror.centos.org/centos/8-stream/BaseOS/x86_64/os/"
-repo --name="AppStream" --baseurl=http://mirror.centos.org/centos/8-stream/AppStream/x86_64/os/
-repo --name="PowerTools" --baseurl=http://mirror.centos.org/centos/8-stream/PowerTools/x86_64/os/
-repo --name="extras" --baseurl=http://mirror.centos.org/centos/8-stream/extras/x86_64/os/
-repo --name="epel" --baseurl=https://download.fedoraproject.org/pub/epel/8/Everything/x86_64/
-repo --name="ManageIQ-Build" --baseurl=https://copr-be.cloud.fedoraproject.org/results/manageiq/ManageIQ-Build/epel-8-x86_64/
+%ifarch x86_64
+url --url="http://mirror.stream.centos.org/9-stream/BaseOS/x86_64/os/"
+repo --name="AppStream" --baseurl=http://mirror.stream.centos.org/9-stream/AppStream/x86_64/os/
+repo --name="CRB" --baseurl=http://mirror.stream.centos.org/9-stream/CRB/x86_64/os/
+repo --name="epel" --baseurl=https://download.fedoraproject.org/pub/epel/9/Everything/x86_64/
+%endif
+
+%ifarch s390x
+url --url="http://mirror.stream.centos.org/9-stream/BaseOS/s390x/os/"
+repo --name="BaseOS" --baseurl=http://mirror.stream.centos.org/9-stream/BaseOS/s390x/os/
+repo --name="AppStream" --baseurl=http://mirror.stream.centos.org/9-stream/AppStream/s390x/os/
+repo --name="CRB" --baseurl=http://mirror.stream.centos.org/9-stream/CRB/s390x/os/
+repo --name="HighAvailability" --baseurl=http://mirror.stream.centos.org/9-stream/HighAvailability/s390x/os/
+repo --name="ResilientStorage" --baseurl=http://mirror.stream.centos.org/9-stream/ResilientStorage/s390x/os/
+repo --name="epel" --baseurl=https://download.fedoraproject.org/pub/epel/9/Everything/s390x/
+%endif
+
+repo --name="ManageIQ-Build" --baseurl=https://copr-be.cloud.fedoraproject.org/results/manageiq/ManageIQ-Build/epel-9-%arch%/
 
 keyboard --vckeymap=us --xlayouts='us'
 
@@ -38,7 +50,7 @@ logging --level=debug
 # Network information
 network --bootproto=dhcp --device=eth1 --onboot=off --noipv6 --no-activate # CHANGEME or remove based on your hardware
 network --bootproto=static --device=eth0 --gateway=192.0.2.1 --ip=192.0.2.2 --nameserver=192.0.2.1 --netmask=255.255.252.0 --noipv6 --activate # CHANGEME
-network --hostname=kegerator8.example.com # CHANGEME
+network --hostname=kegerator9.example.com # CHANGEME
 
 # Root password: smartvm
 rootpw --iscrypted $1$DZprqvCu$mhqFBjfLTH/PVvZIompVP/
@@ -71,7 +83,7 @@ popd
 pip3 install oauth2 cherrypy boto monotonic
 
 pushd /build/imagefactory/scripts
-  sed -i 's/python2\.7/python3\.6/' imagefactory_dev_setup.sh
+  sed -i 's/python2\.7/python3\.9/' imagefactory_dev_setup.sh
   ./imagefactory_dev_setup.sh
 popd
 
@@ -85,7 +97,6 @@ echo "export LIBGUESTFS_BACKEND=direct" >> /root/.bash_profile
 
 # Resulting build storage
 mkdir /mnt/builds
-#echo "nfs-host.example.com:/builds/manageiq /mnt/builds nfs rw,timeo=600,tcp,nfsvers=3,soft,nosharecache,context=system_u:object_r:public_content_rw_t:s0  0 0" >> /etc/fstab # CHANGEME if desired
 
 chvt 1
 
