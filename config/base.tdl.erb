@@ -1,4 +1,17 @@
 <template>
+  <% if ARCH == "s390x" %>
+  <name>RHEL-9-s390x</name>
+  <os>
+    <rootpw>ozrootpw</rootpw>
+    <name>RHEL-9</name>
+    <version>9</version>
+    <arch>s390x</arch>
+    <install type="iso">
+      <iso>file://<%= ISO_FILE.to_s %></iso>
+    </install>
+  </os>
+  <description>RHEL 9 TDL for s390x architecture.</description>
+  <% else %>
   <name>CentOS-9</name>
   <os>
     <rootpw>ozrootpw</rootpw>
@@ -10,6 +23,7 @@
     </install>
   </os>
   <description>CentOS TDL meant to be used with custom kickstart for manageiq.</description>
+  <% end %>
   <disk>
     <size><%= image_size %>G</size>
   </disk>
