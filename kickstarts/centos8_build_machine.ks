@@ -26,6 +26,7 @@ url --url="http://mirror.stream.centos.org/9-stream/BaseOS/x86_64/os/"
 repo --name="AppStream" --baseurl=http://mirror.stream.centos.org/9-stream/AppStream/x86_64/os/
 repo --name="CRB" --baseurl=http://mirror.stream.centos.org/9-stream/CRB/x86_64/os/
 repo --name="epel" --baseurl=https://download.fedoraproject.org/pub/epel/9/Everything/x86_64/
+repo --name="ManageIQ-Build" --baseurl=https://copr-be.cloud.fedoraproject.org/results/manageiq/ManageIQ-Build/epel-9-x86_64/
 %endif
 
 %ifarch s390x
@@ -36,9 +37,9 @@ repo --name="CRB" --baseurl=http://mirror.stream.centos.org/9-stream/CRB/s390x/o
 repo --name="HighAvailability" --baseurl=http://mirror.stream.centos.org/9-stream/HighAvailability/s390x/os/
 repo --name="ResilientStorage" --baseurl=http://mirror.stream.centos.org/9-stream/ResilientStorage/s390x/os/
 repo --name="epel" --baseurl=https://download.fedoraproject.org/pub/epel/9/Everything/s390x/
+repo --name="ManageIQ-Build" --baseurl=https://copr-be.cloud.fedoraproject.org/results/manageiq/ManageIQ-Build/epel-9-s390x/
 %endif
 
-repo --name="ManageIQ-Build" --baseurl=https://copr-be.cloud.fedoraproject.org/results/manageiq/ManageIQ-Build/epel-9-%arch%/
 
 keyboard --vckeymap=us --xlayouts='us'
 
@@ -75,17 +76,15 @@ timezone America/New_York --isUtc --ntpservers=time.nist.gov # CHANGEME if neede
 mkdir -p /build/fileshare /build/images /build/isos /build/logs /build/storage
 
 pushd /build
+  pushd /build
   %ifarch x86_64
   git clone https://www.github.com/ManageIQ/manageiq-appliance-build.git
-  %endif
-  %ifarch s390x
-  git clone https://github.com/Chandrababu-nagilli/manageiq-appliance-build.git
-  %endif
   ln -s manageiq-appliance-build/bin bin
-  %ifarch x86_84
   git clone https://www.github.com/redhat-imaging/imagefactory.git
   %endif
   %ifarch s390x
+  git clone https://github.com/Chandrababu-nagilli/manageiq-appliance-build.git
+  ln -s manageiq-appliance-build/bin bin
   git clone https://github.com/Chandrababu-nagilli/imagefactory.git
   %endif
 popd
