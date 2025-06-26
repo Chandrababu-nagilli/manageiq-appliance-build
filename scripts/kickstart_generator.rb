@@ -20,6 +20,7 @@ module Build
       @targets            = targets
       @product_name       = product_name
       @puddle             = puddle # used during ERB evaluation
+      @arch               = ENV["ARCH"] || `uname -m`.strip
     end
 
     def run
