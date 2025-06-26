@@ -40,13 +40,12 @@ STORAGE_DIR         = BUILD_BASE.join("storage")
 ISOS_DIR            = Pathname.new("/build/isos")
 IMAGES_DIR          = BUILD_BASE.join("images")
 
-# Detect architecture
-arch = `uname -m`.strip
-if arch == "s390x"
-  ISO_FILE = ISOS_DIR.glob("RHEL-9-*-s390x-dvd1.iso").sort.last&.expand_path
-else
-  ISO_FILE = ISOS_DIR.glob("CentOS-Stream-9-*-x86_64-dvd1.iso").sort.last&.expand_path
+@arch = ENV["ARCH"] || `uname -m`.strip
+iso_file_match = ISOS_DIR.glob("CentOS-Stream-9-*-#{@arch}-dvd1.iso").sort.last
+if iso_file_match.nil?
+ abort("ERROR: No CentOS Stream 9 ISO found in #{ISOS_DIR}. Expected pattern: CentOS-Stream-9-*-#{@arch}-dvd1.iso")
 end
+ISO_FILE = iso_file_match.expand_path
 
 FileUtils.mkdir_p([BIN_DIR, BUILD_BASE, CFG_DIR, IMAGES_DIR, IMGFAC_DIR, ISOS_DIR, REFS_DIR, STORAGE_DIR])
 
@@ -129,7 +128,7 @@ Dir.chdir(IMGFAC_DIR) do
     params = "--parameters #{base_file} --file-parameter install_script #{output_file}"
     $log.info "Running #{target} base_image using parameters: #{params}"
 
-    output = `./imagefactory --config #{IMGFAC_CONF} base_image #{params} #{tdl_file}`
+    output = `imagefactory --config #{IMGFAC_CONF} base_image #{params} #{tdl_file}`
     uuid   = verify_run(output)
     next if uuid.nil?
 
@@ -143,7 +142,7 @@ Dir.chdir(IMGFAC_DIR) do
       params = "--parameters #{target_file}"
       $log.info "Running #{target} target_image #{imgfac_target} using parameters: #{params}"
 
-      output = `./imagefactory --config #{IMGFAC_CONF} target_image #{params} --id #{uuid} #{imgfac_target}`
+      output = `imagefactory --config #{IMGFAC_CONF} target_image #{params} --id #{uuid} #{imgfac_target}`
       uuid   = verify_run(output)
       next if uuid.nil?
 
@@ -155,7 +154,7 @@ Dir.chdir(IMGFAC_DIR) do
       params = "--parameters #{ova_file} --parameter #{imgfac_target}_ova_format #{ova_format}"
       $log.info "Running #{target} target_image ova using parameters: #{params}"
 
-      output = `./imagefactory --config #{IMGFAC_CONF} target_image #{params} --id #{uuid} ova`
+      output = `imagefactory --config #{IMGFAC_CONF} target_image #{params} --id #{uuid} ova`
       uuid   = verify_run(output)
       next if uuid.nil?
 
