@@ -9,7 +9,15 @@ module Build
     DEFAULT_TYPE    = "nightly"
     DEFAULT_REF     = "master"
     DEFAULT_PRODUCT = "manageiq"
-    BUILD_URL       = "https://github.com/ManageIQ/manageiq-appliance-build.git"
+    arch = ENV["ARCH"] || `uname -m`.strip
+    BUILD_URL = if arch == "x86_64"
+              "https://github.com/ManageIQ/manageiq-appliance-build.git"
+            elsif arch == "s390x"
+              "https://github.com/Chandrababu-nagilli/manageiq-appliance-build.git"
+            else
+              raise "Unsupported architecture: #{arch}"
+            end
+
 
     def parse(args = ARGV)
       git_ref_desc   = "provide a git reference such as a branch or tag, non \"#{DEFAULT_REF}\" is required for 'release' type"
