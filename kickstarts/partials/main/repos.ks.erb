@@ -7,7 +7,7 @@ repo --name=appstream  --baseurl=https://mirror.stream.centos.org/9-stream/AppSt
 repo --name=crb        --baseurl=https://mirror.stream.centos.org/9-stream/CRB/s390x/os/
 repo --name=epel       --mirrorlist=https://mirrors.fedoraproject.org/mirrorlist?repo=epel-9&arch=s390x
 %endif
-%ifarch x86
+%ifarch x86_64
 # For x86_64 architecture (default)
 repo --name=baseos     --baseurl=https://mirror.stream.centos.org/9-stream/BaseOS/x86_64/os/
 repo --name=appstream  --baseurl=https://mirror.stream.centos.org/9-stream/AppStream/x86_64/os/
