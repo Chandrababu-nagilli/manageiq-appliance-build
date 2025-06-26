@@ -76,7 +76,6 @@ timezone America/New_York --isUtc --ntpservers=time.nist.gov # CHANGEME if neede
 mkdir -p /build/fileshare /build/images /build/isos /build/logs /build/storage
 
 pushd /build
-  pushd /build
   %ifarch x86_64
   git clone https://www.github.com/ManageIQ/manageiq-appliance-build.git
   ln -s manageiq-appliance-build/bin bin
