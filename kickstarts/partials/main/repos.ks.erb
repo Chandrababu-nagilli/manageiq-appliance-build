@@ -1,19 +1,12 @@
 # build time repos - these repos are used to install the initial packages
 
-%ifarch s390x
+
 # For s390x architecture
 repo --name=baseos     --baseurl=https://mirror.stream.centos.org/9-stream/BaseOS/s390x/os/
 repo --name=appstream  --baseurl=https://mirror.stream.centos.org/9-stream/AppStream/s390x/os/
 repo --name=crb        --baseurl=https://mirror.stream.centos.org/9-stream/CRB/s390x/os/
 repo --name=epel       --mirrorlist=https://mirrors.fedoraproject.org/mirrorlist?repo=epel-9&arch=s390x
-%endif
-%ifarch x86_64
-# For x86_64 architecture (default)
-repo --name=baseos     --baseurl=https://mirror.stream.centos.org/9-stream/BaseOS/x86_64/os/
-repo --name=appstream  --baseurl=https://mirror.stream.centos.org/9-stream/AppStream/x86_64/os/
-repo --name=crb        --baseurl=https://mirror.stream.centos.org/9-stream/CRB/x86_64/os/
-repo --name=epel       --mirrorlist=https://mirrors.fedoraproject.org/mirrorlist?repo=epel-9&arch=x86_64
-%endif
+
 
 repo --name=manageiq-20-tal         --baseurl=https://rpm.manageiq.org/release/20-tal/el$releasever/$basearch
 repo --name=manageiq-20-tal-noarch  --baseurl=https://rpm.manageiq.org/release/20-tal/el$releasever/noarch
