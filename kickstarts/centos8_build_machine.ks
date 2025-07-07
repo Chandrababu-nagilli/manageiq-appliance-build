@@ -21,15 +21,15 @@ reboot
 graphical
 
 # Use network installation
-%ifarch x86_64
-url --url="http://mirror.stream.centos.org/9-stream/BaseOS/x86_64/os/"
-repo --name="AppStream" --baseurl=http://mirror.stream.centos.org/9-stream/AppStream/x86_64/os/
-repo --name="CRB" --baseurl=http://mirror.stream.centos.org/9-stream/CRB/x86_64/os/
-repo --name="epel" --baseurl=https://download.fedoraproject.org/pub/epel/9/Everything/x86_64/
-repo --name="ManageIQ-Build" --baseurl=https://copr-be.cloud.fedoraproject.org/results/manageiq/ManageIQ-Build/epel-9-x86_64/
-%endif
+#%ifarch x86_64
+#url --url="http://mirror.stream.centos.org/9-stream/BaseOS/x86_64/os/"
+#repo --name="AppStream" --baseurl=http://mirror.stream.centos.org/9-stream/AppStream/x86_64/os/
+#repo --name="CRB" --baseurl=http://mirror.stream.centos.org/9-stream/CRB/x86_64/os/
+#repo --name="epel" --baseurl=https://download.fedoraproject.org/pub/epel/9/Everything/x86_64/
+#repo --name="ManageIQ-Build" --baseurl=https://copr-be.cloud.fedoraproject.org/results/manageiq/ManageIQ-Build/epel-9-x86_64/
+#%endif
 
-%ifarch s390x
+#%ifarch s390x
 url --url="http://mirror.stream.centos.org/9-stream/BaseOS/s390x/os/"
 repo --name="BaseOS" --baseurl=http://mirror.stream.centos.org/9-stream/BaseOS/s390x/os/
 repo --name="AppStream" --baseurl=http://mirror.stream.centos.org/9-stream/AppStream/s390x/os/
@@ -38,7 +38,7 @@ repo --name="HighAvailability" --baseurl=http://mirror.stream.centos.org/9-strea
 repo --name="ResilientStorage" --baseurl=http://mirror.stream.centos.org/9-stream/ResilientStorage/s390x/os/
 repo --name="epel" --baseurl=https://download.fedoraproject.org/pub/epel/9/Everything/s390x/
 repo --name="ManageIQ-Build" --baseurl=https://copr-be.cloud.fedoraproject.org/results/manageiq/ManageIQ-Build/epel-9-s390x/
-%endif
+#%endif
 
 
 keyboard --vckeymap=us --xlayouts='us'
