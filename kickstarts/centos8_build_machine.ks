@@ -37,7 +37,8 @@ repo --name="CRB" --baseurl=http://mirror.stream.centos.org/9-stream/CRB/s390x/o
 repo --name="HighAvailability" --baseurl=http://mirror.stream.centos.org/9-stream/HighAvailability/s390x/os/
 repo --name="ResilientStorage" --baseurl=http://mirror.stream.centos.org/9-stream/ResilientStorage/s390x/os/
 repo --name="epel" --baseurl=https://download.fedoraproject.org/pub/epel/9/Everything/s390x/
-repo --name="ManageIQ-Build" --baseurl=https://copr-be.cloud.fedoraproject.org/results/manageiq/ManageIQ-Build/epel-9-s390x/
+#repo --name="ManageIQ-Build" --baseurl=https://copr-be.cloud.fedoraproject.org/results/manageiq/ManageIQ-Build/epel-9-s390x/
+repo --name="ManageIQ-Build" --baseurl=https://<%= ENV['ARTIFACTORY_USER'] %>:<%= ENV['ARTIFACTORY_TOKEN'] =%>@na.artifactory.swg-devops.com/artifactory/hyc-bluecf-team-rpm-local/s390x/infrastructure-management-master-20250820231738/
 #%endif
 
 
