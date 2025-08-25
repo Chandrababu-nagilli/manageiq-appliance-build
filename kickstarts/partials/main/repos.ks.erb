@@ -13,7 +13,7 @@ repo --name=manageiq-20-tal-noarch  --baseurl=https://rpm.manageiq.org/release/2
 
 #repo --name=manageiq-20-tal         --baseurl=https://<%= ENV['ARTIFACTORY_USER'] %>:<%= ENV['ARTIFACTORY_TOKEN'] %>@na.artifactory.swg-devops.com/artifactory/hyc-bluecf-team-rpm-local/s390x/infrastructure-management-master-20250820231738/
 #repo --name=manageiq-20-tal-noarch  --baseurl=https://<%= ENV['ARTIFACTORY_USER'] %>:<%= ENV['ARTIFACTORY_TOKEN'] %>@na.artifactory.swg-devops.com/artifactory/hyc-bluecf-team-rpm-local/s390x/infrastructure-management-master-20250820231738/
-repo --name=bluecf-test --cost=10 --baseurl=https://<%= ENV['$ARTIFACTORY_USER'] %>:<%= ENV['$ARTIFACTORY_TOKEN'] %>@na.artifactory.swg-devops.com/artifactory/hyc-bluecf-team-rpm-local
+repo --name=bluecf-test --cost=10 --baseurl=https://<%= ENV['ARTIFACTORY_USER'] %>:<%= ENV['ARTIFACTORY_TOKEN'] %>@na.artifactory.swg-devops.com/artifactory/hyc-bluecf-team-rpm-local
 <% if @build_type != "release" %>
 repo --name=manageiq-20-tal-nightly --baseurl=https://rpm.manageiq.org/release/20-tal-nightly/el$releasever/$basearch
 #repo --name=manageiq-20-tal-nightly --baseurl=https://<%= ENV['ARTIFACTORY_USER'] %>:<%= ENV['ARTIFACTORY_TOKEN'] %>@na.artifactory.swg-devops.com/artifactory/hyc-bluecf-team-rpm-local/s390x/infrastructure-management-master-20250820231738/
