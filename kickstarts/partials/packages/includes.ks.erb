@@ -3,11 +3,17 @@
 
 epel-release
 manageiq-release
+infrastructure-management-appliance
 
 createrepo
 fuse-libs
 
 python3-devel                    # for building python modules in post
+kernel
+libguestfs
+libguestfs-tools
+python3-libguestfs
+dracut-config-generic
 
 <% if @target != "azure" && @target != "gce" %>
 cloud-init
