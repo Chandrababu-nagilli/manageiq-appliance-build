@@ -1,4 +1,3 @@
-<% if @arch == "s390x" %>
 echo "Configuring s390x-specific settings..."
 
 # Create complete zipl.conf for s390x bootloader
@@ -45,4 +44,3 @@ EOF
 systemctl daemon-reload
 
 echo "s390x configuration complete"
-<% end %>
