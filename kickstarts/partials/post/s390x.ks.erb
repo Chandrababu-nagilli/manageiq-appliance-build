@@ -1,0 +1,48 @@
+<% if @arch == "s390x" %>
+echo "Configuring s390x-specific settings..."
+
+# Create complete zipl.conf for s390x bootloader
+cat > /etc/zipl.conf << 'ZIPL_EOF'
+[defaultboot]
+defaultauto
+prompt=1
+timeout=5
+target=/boot
+secure=auto
+
+[linux]
+image=/boot/vmlinuz-$(uname -r)
+ramdisk=/boot/initramfs-$(uname -r).img
+parameters="root=/dev/mapper/vg_system-lv_os rhgb quiet console=ttysclp0 console=tty0 crashkernel=1G-2G:192M,2G-64G:256M,64G-:512M rd.lvm.lv=vg_system/lv_os rd.lvm.lv=vg_system/lv_swap"
+
+[rescue]
+image=/boot/vmlinuz-0-rescue-*
+ramdisk=/boot/initramfs-0-rescue-*.img
+parameters="root=/dev/mapper/vg_system-lv_os rhgb quiet console=ttysclp0 console=tty0 crashkernel=1G-2G:192M,2G-64G:256M,64G-:512M rd.lvm.lv=vg_system/lv_os rd.lvm.lv=vg_system/lv_swap"
+ZIPL_EOF
+
+# Apply zipl configuration
+zipl
+
+# Configure systemd service timeouts for s390x (workers take 15-20 minutes to start)
+echo "Configuring systemd timeouts for s390x..."
+
+for service in ui generic priority reporting web_service event_handler ems_metrics_processor automation remote_console schedule; do
+  mkdir -p /etc/systemd/system/manageiq-${service}@.service.d
+  cat > /etc/systemd/system/manageiq-${service}@.service.d/timeout.conf << 'EOF'
+[Service]
+TimeoutStartSec=1800
+EOF
+done
+
+# Configure evmserverd timeout
+mkdir -p /etc/systemd/system/evmserverd.service.d
+cat > /etc/systemd/system/evmserverd.service.d/timeout.conf << 'EOF'
+[Service]
+TimeoutStopSec=300
+EOF
+
+systemctl daemon-reload
+
+echo "s390x configuration complete"
+<% end %>
