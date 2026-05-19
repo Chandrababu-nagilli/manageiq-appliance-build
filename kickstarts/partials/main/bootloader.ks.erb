@@ -1,9 +1,21 @@
-<% if @target == "ec2" || @target == "openstack" %>
-bootloader --location=mbr --driveorder=vda --append="crashkernel=auto rhgb quiet console=tty0 console=ttyS0,115200n8"
-<% elsif @target == "azure" %>
-bootloader --location=mbr --driveorder=vda --append="crashkernel=auto rhgb quiet console=ttyS0 earlyprintk=ttyS0 rootdelay=300"
-<% elsif @target == "gce" %>
-bootloader --location=mbr --driveorder=vda --append="crashkernel=auto rhgb quiet console=ttyS0,38400n8"
+<% if @arch == "s390x" %>
+  <% if @target == "ec2" || @target == "openstack" %>
+bootloader --location=mbr --driveorder=vda --append="crashkernel=auto rhgb quiet console=tty0 console=ttysclp0,115200n8"
+  <% elsif @target == "azure" %>
+bootloader --location=mbr --driveorder=vda --append="crashkernel=auto rhgb quiet console=ttysclp0 earlyprintk=ttysclp0 rootdelay=300"
+  <% elsif @target == "gce" %>
+bootloader --location=mbr --driveorder=vda --append="crashkernel=auto rhgb quiet console=ttysclp0,38400n8"
+  <% else %>
+bootloader --location=mbr --driveorder=vda --append="crashkernel=auto rhgb quiet console=ttysclp0,115200 console=tty0"
+  <% end %>
 <% else %>
+  <% if @target == "ec2" || @target == "openstack" %>
+bootloader --location=mbr --driveorder=vda --append="crashkernel=auto rhgb quiet console=tty0 console=ttyS0,115200n8"
+  <% elsif @target == "azure" %>
+bootloader --location=mbr --driveorder=vda --append="crashkernel=auto rhgb quiet console=ttyS0 earlyprintk=ttyS0 rootdelay=300"
+  <% elsif @target == "gce" %>
+bootloader --location=mbr --driveorder=vda --append="crashkernel=auto rhgb quiet console=ttyS0,38400n8"
+  <% else %>
 bootloader --location=mbr --driveorder=vda --append="crashkernel=auto rhgb quiet console=ttyS0,115200 console=tty0"
+  <% end %>
 <% end %>
