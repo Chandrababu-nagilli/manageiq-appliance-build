@@ -11,7 +11,7 @@ repo --name=epel       --mirrorlist=https://mirrors.fedoraproject.org/mirrorlist
 repo --name=manageiq-20-tal         --baseurl=https://rpm.manageiq.org/release/20-tal/el$releasever/$basearch
 repo --name=manageiq-20-tal-noarch  --baseurl=https://rpm.manageiq.org/release/20-tal/el$releasever/noarch
 
-repo --name=ManageIQ-Build --baseurl=https://<%= ENV['ARTIFACTORY_USER'] %>:<%= ENV['ARTIFACTORY_TOKEN'] %>@na.artifactory.swg-devops.com/artifactory/hyc-bluecf-team-rpm-local/s390x/infrastructure-management-master-20260409161351/ 
+repo --name=ManageIQ-Build --baseurl=https://<%= ENV['ARTIFACTORY_USER'] %>:<%= ENV['ARTIFACTORY_TOKEN'] %>@na.artifactory.swg-devops.com/artifactory/hyc-bluecf-team-19-rpm-local/s390x/infrastructure-management-19.y-20251122035722/ 
 #repo --name=bluecf-test --cost=10 --baseurl=https://<%= ENV['ARTIFACTORY_USER'] %>:<%= ENV['ARTIFACTORY_TOKEN'] %>@na.artifactory.swg-devops.com/artifactory/hyc-bluecf-team-rpm-local
 <% if @build_type != "release" %>
 repo --name=manageiq-20-tal-nightly --baseurl=https://rpm.manageiq.org/release/20-tal-nightly/el$releasever/$basearch
