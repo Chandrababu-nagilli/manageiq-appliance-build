@@ -13,9 +13,9 @@ repo --name=epel       --mirrorlist=https://mirrors.fedoraproject.org/mirrorlist
 
 repo --name=ManageIQ-Build --baseurl=https://<%= ENV['ARTIFACTORY_USER'] %>:<%= ENV['ARTIFACTORY_TOKEN'] %>@na.artifactory.swg-devops.com/artifactory/hyc-bluecf-team-19-rpm-local 
 #repo --name=bluecf-test --cost=10 --baseurl=https://<%= ENV['ARTIFACTORY_USER'] %>:<%= ENV['ARTIFACTORY_TOKEN'] %>@na.artifactory.swg-devops.com/artifactory/hyc-bluecf-team-rpm-local
-<% if @build_type != "release" %>
-repo --name=manageiq-20-tal-nightly --baseurl=https://rpm.manageiq.org/release/20-tal-nightly/el$releasever/$basearch
-<% end %>
+#<% if @build_type != "release" %>
+#repo --name=manageiq-20-tal-nightly --baseurl=https://rpm.manageiq.org/release/20-tal-nightly/el$releasever/$basearch
+#<% end %>
 
 <% if @target == "gce" %>
 repo --name=google-compute-engine --baseurl=https://packages.cloud.google.com/yum/repos/google-compute-engine-el9-x86_64-stable
