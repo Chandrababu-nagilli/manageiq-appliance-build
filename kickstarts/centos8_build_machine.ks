@@ -37,7 +37,7 @@ repo --name="CRB" --baseurl=http://mirror.stream.centos.org/9-stream/CRB/s390x/o
 repo --name="HighAvailability" --baseurl=http://mirror.stream.centos.org/9-stream/HighAvailability/s390x/os/
 repo --name="ResilientStorage" --baseurl=http://mirror.stream.centos.org/9-stream/ResilientStorage/s390x/os/
 repo --name="epel" --baseurl=https://download.fedoraproject.org/pub/epel/9/Everything/s390x/
-repo --name="ManageIQ-Build" --baseurl=https://<%= ENV['ARTIFACTORY_USER'] %>:<%= ENV['ARTIFACTORY_TOKEN'] %>@na.artifactory.swg-devops.com/artifactory/hyc-bluecf-team-19-rpm-local/s390x/infrastructure-management-19.y-20251122035722/ --install
+repo --name="ManageIQ-Build" --baseurl=https://<%= ENV['ARTIFACTORY_USER'] %>:<%= ENV['ARTIFACTORY_TOKEN'] %>@na.artifactory.swg-devops.com/artifactory/sys-ibmz-cp4d-team-python-staging-pypi-local/s390x-IM/ --install
 #%endif
 
 
