@@ -6,7 +6,7 @@
     <version>9</version>
     <arch>s390x</arch>
     <% if @arch == "s390x" %>
-    <kernelparam>ip=dhcp rd.neednet=1</kernelparam>
+    <kernelparam>rd.neednet=0</kernelparam>
     <% end %>
     <install type="url">
       <url>http://mirror.stream.centos.org/9-stream/BaseOS/s390x/os/</url>
