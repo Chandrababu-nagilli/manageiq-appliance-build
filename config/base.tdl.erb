@@ -5,9 +5,8 @@
     <name>CentOS-9</name>
     <version>9</version>
     <arch>s390x</arch>
-    <kernelparam>rd.neednet=0 rd.iscsi=0 rd.iscsi.firmware=0 rd.iscsi.initiator= rd.iscsi.target.name= rd.iscsi.target.ip= rd.iscsi.target.port= rd.iscsi.target.group= rd.iscsi.username= rd.iscsi.password= rd.iscsi.in.username= rd.iscsi.in.password= rd.iscsi.ibft=0 ip=dhcp</kernelparam>
-    <install type="url">
-      <url>http://mirror.stream.centos.org/9-stream/BaseOS/s390x/os/</url>
+    <install type="iso">
+      <iso>file://<%= ISO_FILE.to_s %></iso>
     </install>
   </os>
   <description>CentOS Stream 9 s390x Image</description>
