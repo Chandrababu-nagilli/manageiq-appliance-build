@@ -1,7 +1,12 @@
+<%
+# s390x uses enc* device names (enc1, enc2, etc.) instead of eth* or link
+# Using --device=link on s390x triggers dracut's parse-kickstart which tries to initialize iSCSI
+device = @arch == "s390x" ? "enc1" : "link"
+%>
 <% if @target == "ec2" || @target == "azure" %>
-network --bootproto=dhcp --device=link --activate --onboot=on --noipv6
+network --bootproto=dhcp --device=<%= device %> --activate --onboot=on --noipv6
 <% elsif @target == "gce" %>
-network --bootproto=dhcp --device=link --activate --onboot=on --noipv6 --mtu=1460
+network --bootproto=dhcp --device=<%= device %> --activate --onboot=on --noipv6 --mtu=1460
 <% else %>
-network --bootproto=dhcp --device=link --activate --onboot=on
+network --bootproto=dhcp --device=<%= device %> --activate --onboot=on
 <% end %>
