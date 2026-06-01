@@ -5,7 +5,7 @@
     <name>CentOS-9</name>
     <version>9</version>
     <arch>s390x</arch>
-    <kernelparam>rd.neednet=0 rd.iscsi=0 rd.iscsi.firmware=0 rd.iscsi.initiator= rd.driver.blacklist=iscsi_tcp,iscsi_ibft,libiscsi rd.omit=iscsi ip=dhcp</kernelparam>
+    <kernelparam>root=live:CDLABEL=ANACONDA rd.neednet=0 rd.iscsi=0 rd.iscsi.firmware=0 ip=dhcp</kernelparam>
     <install type="url">
       <url>http://mirror.stream.centos.org/9-stream/BaseOS/s390x/os/</url>
     </install>
