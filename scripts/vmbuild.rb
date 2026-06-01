@@ -28,7 +28,7 @@ else
   build_label = "#{cli_options[:type]}-#{cli_options[:reference]}"
 end
 
-BUILD_BASE          = ENV["GITHUB_ACTIONS"] ? Pathname.new("/build/gha/#{ENV['GITHUB_RUN_ID']}") : Pathname.new("/build")
+BUILD_BASE          = ENV["BUILD_BASE"] ? Pathname.new(ENV["BUILD_BASE"]) : (ENV["GITHUB_ACTIONS"] ? Pathname.new("/build/gha/#{ENV['GITHUB_RUN_ID']}") : Pathname.new("/build"))
 GPG_DIR             = Pathname.new("/root/.gnupg")
 SCRIPT_DIR          = Pathname.new(__dir__)
 BIN_DIR             = SCRIPT_DIR.join("../bin")
