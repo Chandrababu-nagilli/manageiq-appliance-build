@@ -13,13 +13,14 @@ module Build
 
     attr_reader :targets, :product_name, :puddle
 
-    def initialize(build_base, build_type, targets, product_name, puddle)
+     def initialize(build_base, build_type, targets, product_name, puddle, arch = nil)
       @build_base         = Pathname.new(build_base)
       @build_type         = build_type
       @ks_gen_base        = @build_base.join(KS_GEN_DIR)
       @targets            = targets
       @product_name       = product_name
       @puddle             = puddle # used during ERB evaluation
+      @arch               = arch || ENV["ARCH"] || `uname -m`.strip
     end
 
     def run
