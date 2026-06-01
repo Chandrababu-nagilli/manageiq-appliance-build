@@ -1,7 +1,17 @@
+<%
+# On s390x, dracut's parse-kickstart has issues with --device=link
+# causing it to incorrectly assume iSCSI is needed. Use kernel params instead.
+# On x86_64, --device=link works fine because network devices are named eth0, eth1, etc.
+# and dracut can find them. On s390x, devices are named enc<busid> and dracut fails.
+%>
+<% if @arch == "s390x" %>
+# Network configured via kernel parameters (ip=dhcp rd.neednet=1) in TDL for s390x
+<% else %>
 <% if @target == "ec2" || @target == "azure" %>
 network --bootproto=dhcp --device=link --activate --onboot=on --noipv6
 <% elsif @target == "gce" %>
 network --bootproto=dhcp --device=link --activate --onboot=on --noipv6 --mtu=1460
 <% else %>
 network --bootproto=dhcp --device=link --activate --onboot=on
+<% end %>
 <% end %>
