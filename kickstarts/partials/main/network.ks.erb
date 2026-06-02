@@ -1,16 +1,7 @@
-<%
-# s390x: Skip network directive in kickstart to avoid triggering dracut's parse-kickstart iSCSI initialization
-# Network will be configured via kernel parameters in TDL instead
-unless @arch == "s390x"
-  device = "link"
-%>
 <% if @target == "ec2" || @target == "azure" %>
-network --bootproto=dhcp --device=<%= device %> --activate --onboot=on --noipv6
+network --bootproto=dhcp --device=link --activate --onboot=on --noipv6
 <% elsif @target == "gce" %>
-network --bootproto=dhcp --device=<%= device %> --activate --onboot=on --noipv6 --mtu=1460
+network --bootproto=dhcp --device=link --activate --onboot=on --noipv6 --mtu=1460
 <% else %>
-network --bootproto=dhcp --device=<%= device %> --activate --onboot=on
+network --bootproto=dhcp --device=link --activate --onboot=on
 <% end %>
-<%
-end
-%>
