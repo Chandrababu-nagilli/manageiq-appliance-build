@@ -8,8 +8,8 @@ repo --name=crb        --baseurl=https://mirror.stream.centos.org/9-stream/CRB/s
 repo --name=epel       --mirrorlist=https://mirrors.fedoraproject.org/mirrorlist?repo=epel-9&arch=s390x
 
 
-#repo --name=manageiq-20-tal         --baseurl=https://rpm.manageiq.org/release/20-tal/el$releasever/$basearch
-#repo --name=manageiq-20-tal-noarch  --baseurl=https://rpm.manageiq.org/release/20-tal/el$releasever/noarch
+repo --name=manageiq-20-tal         --baseurl=https://rpm.manageiq.org/release/20-tal/el$releasever/$basearch
+repo --name=manageiq-20-tal-noarch  --baseurl=https://rpm.manageiq.org/release/20-tal/el$releasever/noarch
 
 repo --name=ManageIQ-Build --baseurl=https://<%= ENV['ARTIFACTORY_USER'] %>:<%= ENV['ARTIFACTORY_TOKEN'] %>@na.artifactory.swg-devops.com/artifactory/sys-ibmz-cp4d-team-python-staging-pypi-local/s390x-IM/
 #<% if @build_type != "release" %>
