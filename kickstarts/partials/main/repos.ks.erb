@@ -8,11 +8,16 @@ repo --name=crb        --baseurl=https://mirror.stream.centos.org/9-stream/CRB/s
 repo --name=epel       --mirrorlist=https://mirrors.fedoraproject.org/mirrorlist?repo=epel-9&arch=s390x
 
 
-repo --name=manageiq-20-tal         --baseurl=https://rpm.manageiq.org/release/20-tal/el$releasever/$basearch
-repo --name=manageiq-20-tal-noarch  --baseurl=https://rpm.manageiq.org/release/20-tal/el$releasever/noarch
+#repo --name=manageiq-20-tal         --baseurl=https://rpm.manageiq.org/release/20-tal/el$releasever/$basearch
+#repo --name=manageiq-20-tal-noarch  --baseurl=https://rpm.manageiq.org/release/20-tal/el$releasever/noarch
 
-#repo --name=ManageIQ-Build --baseurl=https://<%= ENV['ARTIFACTORY_USER'] %>:<%= ENV['ARTIFACTORY_TOKEN'] %>@na.artifactory.swg-devops.com/artifactory/sys-ibmz-cp4d-team-python-staging-pypi-local/s390x-IM/
-repo --name=ManageIQ-Build --baseurl=https://<%= ENV['ARTIFACTORY_USER'] %>:<%= ENV['ARTIFACTORY_TOKEN'] %>@na.artifactory.swg-devops.com/artifactory/hyc-bluecf-team-19-rpm-local/s390x/infrastructure-management-19.y-20251122035722/ 
+repo --name=manageiq-nightly   --baseurl=https://rpm.manageiq.org/builds/manageiq-nightly/
+repo --name=manageiq-kafka     --baseurl=https://rpm.manageiq.org/builds/kafka/
+repo --name=manageiq-repmgr13  --baseurl=https://rpm.manageiq.org/builds/repmgr13/
+
+
+repo --name=ManageIQ-Build --baseurl=https://<%= ENV['ARTIFACTORY_USER'] %>:<%= ENV['ARTIFACTORY_TOKEN'] %>@na.artifactory.swg-devops.com/artifactory/sys-ibmz-cp4d-team-python-staging-pypi-local/s390x-IM/
+#repo --name=ManageIQ-Build --baseurl=https://<%= ENV['ARTIFACTORY_USER'] %>:<%= ENV['ARTIFACTORY_TOKEN'] %>@na.artifactory.swg-devops.com/artifactory/hyc-bluecf-team-19-rpm-local/s390x/infrastructure-management-19.y-20251122035722/ 
 
 <% if @build_type != "release" %>
 repo --name=manageiq-20-tal-nightly --baseurl=https://rpm.manageiq.org/release/20-tal-nightly/el$releasever/$basearch
