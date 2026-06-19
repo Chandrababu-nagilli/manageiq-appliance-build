@@ -23,7 +23,7 @@ cloud-init
    when "azure" %>
 WALinuxAgent
 <% when "ec2" %>
-dracut-config-generic
+# dracut-config-generic already included above for s390x
 <% when "hyperv" %>
 hyperv-daemons
 <% when "libvirt", "ovirt" %>
