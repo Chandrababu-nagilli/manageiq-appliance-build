@@ -1,7 +1,22 @@
+# Configure dracut for s390x BEFORE initramfs rebuild
+echo "Creating dracut configuration for s390x..."
+cat > /etc/dracut.conf.d/99-s390x.conf << 'DRACUT_EOF'
+# S390X specific dracut configuration
+compress="xz -9 --check=crc32"
+hostonly="no"
+add_drivers+=" virtio_blk virtio_net virtio_pci virtio_scsi virtio_console dasd_mod dasd_eckd_mod dasd_fba_mod qeth qeth_l2 qeth_l3 "
+add_dracutmodules+=" zipl lvm "
+omit_dracutmodules+=" plymouth "
+kernel_cmdline="rd.driver.pre=virtio_blk,virtio_scsi"
+DRACUT_EOF
+
 echo "Configuring s390x-specific settings..."
 
-# Create complete zipl.conf for s390x bootloader
-cat > /etc/zipl.conf << 'ZIPL_EOF'
+# Get the actual kernel version
+kversion=$(rpm -q kernel --qf '%{version}-%{release}.%{arch}\n')
+
+# Create complete zipl.conf for s390x bootloader with actual kernel version
+cat > /etc/zipl.conf << ZIPL_EOF
 [defaultboot]
 defaultauto
 prompt=1
@@ -10,18 +25,12 @@ target=/boot
 secure=auto
 
 [linux]
-image=/boot/vmlinuz-$(uname -r)
-ramdisk=/boot/initramfs-$(uname -r).img
-parameters="root=/dev/mapper/vg_system-lv_os rhgb quiet console=ttysclp0 console=tty0 crashkernel=1G-2G:192M,2G-64G:256M,64G-:512M rd.lvm.lv=vg_system/lv_os rd.lvm.lv=vg_system/lv_swap"
-
-[rescue]
-image=/boot/vmlinuz-0-rescue-*
-ramdisk=/boot/initramfs-0-rescue-*.img
-parameters="root=/dev/mapper/vg_system-lv_os rhgb quiet console=ttysclp0 console=tty0 crashkernel=1G-2G:192M,2G-64G:256M,64G-:512M rd.lvm.lv=vg_system/lv_os rd.lvm.lv=vg_system/lv_swap"
+image=/boot/vmlinuz-${kversion}
+ramdisk=/boot/initramfs-${kversion}.img
+parameters="root=/dev/mapper/vg_system-lv_os rhgb quiet console=ttysclp0 console=tty0 crashkernel=1G-2G:192M,2G-64G:256M,64G-:512M rd.lvm.lv=vg_system/lv_os rd.lvm.lv=vg_system/lv_swap rd.driver.pre=virtio_blk,virtio_scsi"
 ZIPL_EOF
 
-# Apply zipl configuration
-zipl
+echo "zipl.conf created for kernel version: $kversion"
 
 # Configure systemd service timeouts for s390x (workers take 15-20 minutes to start)
 echo "Configuring systemd timeouts for s390x..."
