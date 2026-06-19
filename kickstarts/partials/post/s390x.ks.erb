@@ -12,9 +12,6 @@ DRACUT_EOF
 
 echo "Configuring s390x-specific settings..."
 
-# Get the actual kernel version
-kversion=$(rpm -q kernel --qf '%{version}-%{release}.%{arch}\n')
-
 # Create complete zipl.conf for s390x bootloader with actual kernel version
 cat > /etc/zipl.conf << ZIPL_EOF
 [defaultboot]
