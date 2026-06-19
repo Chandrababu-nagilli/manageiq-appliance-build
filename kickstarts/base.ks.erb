@@ -85,11 +85,29 @@ EOF
 kversion=$(rpm -q kernel --qf '%{version}-%{release}.%{arch}\n')
 ramfsfile="/boot/initramfs-$kversion.img"
 <% if @arch == "s390x" %>
-# s390x uses virtio drivers, not SCSI
-drivers="virtio_blk virtio_net virtio_pci virtio_scsi virtio_console"
+<%= render_partial "post/s390x" %>
+
+# s390x uses virtio drivers, not SCSI - dracut config already set in s390x partial
+echo "Rebuilding initramfs for s390x with proper configuration..."
+drivers="virtio_blk virtio_net virtio_pci virtio_scsi virtio_console dasd_mod dasd_eckd_mod dasd_fba_mod qeth"
 dracut --force --add-drivers "$drivers" --compress="xz -9 --check=crc32" $ramfsfile $kversion
 
-<%= render_partial "post/s390x" %>
+# Verify initramfs was created successfully
+if [ ! -f "$ramfsfile" ]; then
+  echo "ERROR: Failed to create initramfs at $ramfsfile"
+  exit 1
+fi
+
+# Verify initramfs contains required drivers
+echo "Verifying initramfs contents..."
+lsinitrd $ramfsfile | grep -E 'virtio_blk|dasd_mod' || echo "WARNING: Required drivers may be missing from initramfs"
+
+# Update zipl bootloader after initramfs rebuild
+echo "Updating zipl bootloader..."
+zipl --verbose || {
+  echo "ERROR: zipl update failed"
+  exit 1
+}
 <% else %>
 <% case @target
    when "azure", "hyperv" %>
