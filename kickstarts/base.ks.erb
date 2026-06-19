@@ -70,8 +70,6 @@ export PATH=$PATH:/usr/local/bin
 
 <%= render_partial "post/repos" %>
 
-<%= render_partial "post/s390x" %>
-
 source /etc/default/evm
 $APPLIANCE_SOURCE_DIRECTORY/manageiq-setup.sh
 
@@ -90,8 +88,8 @@ ramfsfile="/boot/initramfs-$kversion.img"
 # s390x uses virtio drivers, not SCSI
 drivers="virtio_blk virtio_net virtio_pci virtio_scsi virtio_console"
 dracut --force --add-drivers "$drivers" --compress="xz -9 --check=crc32" $ramfsfile $kversion
-# Ensure zipl bootloader is configured (s390x specific)
-zipl
+
+<%= render_partial "post/s390x" %>
 <% else %>
 <% case @target
    when "azure", "hyperv" %>
@@ -103,7 +101,8 @@ drivers="mptspi vmw_pvscsi"
 <% else %>
 drivers="mptbase mptscsih mptspi"
 <% end %>
-
+dracut --force --add-drivers "$drivers" $ramfsfile $kversion
+<% end %>
 
 # Verify kernel installation
 rpm -qa | grep kernel
