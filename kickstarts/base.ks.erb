@@ -139,6 +139,18 @@ dnf -C -y --noplugins remove linux-firmware doxygen
 # Ensure packages are up to date
 dnf -y update
 
+# bundler 2.5.x (pulled in by the update above) pre-activates base64 0.2.0 as
+# a Ruby 3.3 default gem before reading any Gemfile. The ManageIQ
+# appliance-console Gemfile.lock pins base64 0.1.2, which causes a
+# Gem::LoadError every time appliance_console is launched.
+# Removing 0.2.0 here — at image build time — means the conflict never exists
+# at runtime on any appliance booted from this image.
+GEMSET=/opt/IBM/infrastructure-management-gemset
+if [ -d "$GEMSET" ]; then
+  GEM_HOME=$GEMSET GEM_PATH=$GEMSET \
+    gem uninstall base64 -v 0.2.0 --force --ignore-dependencies 2>/dev/null || true
+fi
+
 /usr/bin/generate_rpm_manifest.sh
 
 # CentOS 7.3 isn't clearing out spaces during install.
