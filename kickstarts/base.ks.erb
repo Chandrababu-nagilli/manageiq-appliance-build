@@ -73,6 +73,19 @@ export PATH=$PATH:/usr/local/bin
 source /etc/default/evm
 $APPLIANCE_SOURCE_DIRECTORY/manageiq-setup.sh
 
+# ruby-default-gems-3.3.10+ pre-activates base64 0.2.0 before Bundler.setup
+# runs in appliance_console. The vmdb Gemfile.lock pins base64 (0.1.2) with
+# ~>0.1 and ~>0.1.1 constraints (from oauth and jwt gems), causing a
+# Gem::LoadError on every appliance_console launch. Patch the lock file here
+# at image build time so the image needs no post-install workaround.
+LOCK=/opt/IBM/infrastructure-management-gemset/vmdb/Gemfile.lock
+if [ -f "$LOCK" ] && grep -q 'base64 (0\.1\.2)' "$LOCK"; then
+  sed -i 's/base64 (0\.1\.2)/base64 (0.2.0)/' "$LOCK"
+  sed -i 's/base64 (~> 0\.1\.1)/base64 (>= 0.1)/' "$LOCK"
+  sed -i 's/base64 (~> 0\.1)/base64 (>= 0.1)/' "$LOCK"
+  echo "Patched $LOCK: base64 0.1.2 -> 0.2.0"
+fi
+
 <%= render_partial "post/systemd" %>
 
 # Disable zeroconfig to allow access to meta-data service by cloud-init
@@ -138,18 +151,6 @@ dnf -C -y --noplugins remove linux-firmware doxygen
 
 # Ensure packages are up to date
 dnf -y update
-
-# bundler 2.5.x (pulled in by the update above) pre-activates base64 0.2.0 as
-# a Ruby 3.3 default gem before reading any Gemfile. The ManageIQ
-# appliance-console Gemfile.lock pins base64 0.1.2, which causes a
-# Gem::LoadError every time appliance_console is launched.
-# Removing 0.2.0 here — at image build time — means the conflict never exists
-# at runtime on any appliance booted from this image.
-GEMSET=/opt/IBM/infrastructure-management-gemset
-if [ -d "$GEMSET" ]; then
-  GEM_HOME=$GEMSET GEM_PATH=$GEMSET \
-    gem uninstall base64 -v 0.2.0 --force --ignore-dependencies 2>/dev/null || true
-fi
 
 /usr/bin/generate_rpm_manifest.sh
 
